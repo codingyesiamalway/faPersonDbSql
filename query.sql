@@ -15,3 +15,12 @@ from person
 where sEvent = "ANS"
 group by sId)  ans  on (total.sId = ans.sId)
 order by rate desc
+
+
+# Given a person has answer question A, find the question next question to show. 
+# specifically show next question with highest answer rate given question a has been answered
+
+
+
+
+
