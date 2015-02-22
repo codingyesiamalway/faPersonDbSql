@@ -46,4 +46,20 @@ from person
 where sEvent = "ANS" and sId = 1
 ) and sEvent = "ANS"
 group by sid
-) ans  on (tot.sId = ans.sId)
+) ans  on (tot.sId = ans.sId);
+
+
+# find all ipids that have moer than 5 timestamps in a 300-second moving window
+select p.ipid, p.accesstime, p.num / q.num
+from
+(select t1.ipid, t1.accesstime, count(t2.accesstime) as num
+from ipacesstime t1, ipacesstime t2
+where t1.ipid=t2.ipid and t2.accesstime-t1.accesstime<=300 and t2.accesstime>=t1.accessTime
+group by t1.ipid, t1.accesstime
+order by count(t2.accesstime) desc) p inner join 
+(
+
+select t1.ipid, t1.accesstime, count(*) as num
+from ipacesstime t1
+group by t1.ipid, t1.accesstime) q on (p.ipid = q.ipid and p.accesstime = q.accesstime)
+where p.num / q.num >= 5;
